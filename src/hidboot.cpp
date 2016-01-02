@@ -142,13 +142,34 @@ const uint8_t KeyboardReportParser::padKeys[] = { '/', '*', '-', '+', 0x13 };
  *
  * \return Keyboard corresponding ASCII value on success, 0 otherwise.
  */
+
+/* Key modifier bit map.
+ * 0 LEFT CTRL
+ * 1 LEFT SHIFT
+ * 2 LEFT ALT
+ * 3 LEFT GUI
+ * 4 RIGHT CTRL
+ * 5 RIGHT SHIFT
+ * 6 RIGHT ALT
+ * 7 RIGHT GUI
+ *
+ * shift = (mod & 0x22) means shift is non-zero
+ * 	if either or both shift keys are active
+ * ctrl  = (mod & 0x11) means ctrl is non-zero
+ * 	if either or both control keys are active
+ */
+
 uint8_t KeyboardReportParser::OemToAscii(uint8_t mod, uint8_t key)
 {
 	uint8_t shift = (mod & 0x22);
+	uint8_t ctrl  = (mod & 0x11);
 
 	// [a-z]
 	if (key > 0x03 && key < 0x1e)
 	{
+		// [^a-^z]
+		if (ctrl) return (key - 3);
+
 		// Upper case letters
 		if ( (kbdLockingKeys.kbdLeds.bmCapsLock == 0 && (mod & 2)) ||
 			 (kbdLockingKeys.kbdLeds.bmCapsLock == 1 && (mod & 2) == 0) )
@@ -162,7 +183,17 @@ uint8_t KeyboardReportParser::OemToAscii(uint8_t mod, uint8_t key)
 	else if (key > 0x1d && key < 0x27)
 	{
 		if (shift)
-			return (numKeys[key - 0x1e]);
+		{
+			if (ctrl)
+			{
+				if (key == 0x23)
+					return (0x1E);	/* RS ^^ */
+				else
+					return (0x00);
+			}
+			else
+				return (numKeys[key - 0x1e]);
+		}
 		else
 			return (key - 0x1e + '1');
 	}
@@ -173,7 +204,33 @@ uint8_t KeyboardReportParser::OemToAscii(uint8_t mod, uint8_t key)
 			return (key - 0x59 + '1');
 	}
 	else if (key > 0x2c && key < 0x39)
-		return ((shift) ? symKeysUp[key-0x2d] : symKeysLo[key-0x2d]);
+	{
+		if (shift)
+		{
+			if (ctrl)
+			{
+				if (key == 0x2d)
+					return (0x1F);	/* US ^_ */
+				else
+					return (0x00);
+			}
+			else
+				return symKeysUp[key-0x2d];
+		}
+		else
+		{
+			if (ctrl)
+				switch (key)
+				{
+					case 0x2F:	return 0x1B;	/* ESC ^[ */
+					case 0x31:	return 0x1C;	/* FS  ^\ */
+					case 0x30:	return 0x1D;	/* GS  ^] */
+					default:	return 0x00;
+				}
+			else
+				return symKeysLo[key-0x2d];
+		}
+	}
 	else if (key > 0x53 && key < 0x59)
 		return padKeys[key - 0x54];
 	else
@@ -181,7 +238,10 @@ uint8_t KeyboardReportParser::OemToAscii(uint8_t mod, uint8_t key)
 		switch (key)
 		{
 			case KEY_SPACE:		return (0x20);
-			case KEY_ENTER:		return (0x13);
+			case KEY_ENTER:		return (0x0D);
+			case KEY_ESCAPE:	return (0x1B);
+			case KEY_DELETE:	return (0x08);
+			case KEY_TAB:		return (0x09);
 			case KEY_ZERO:		return ((shift) ? ')' : '0');
 			case KEY_ZERO2:		return ((kbdLockingKeys.kbdLeds.bmNumLock == 1) ? '0' : 0);
 			case KEY_PERIOD:	return ((kbdLockingKeys.kbdLeds.bmNumLock == 1) ? '.' : 0);
