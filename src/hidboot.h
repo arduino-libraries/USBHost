@@ -464,6 +464,7 @@ void HIDBoot<BOOT_PROTOCOL>::EndpointXtract(uint32_t conf, uint32_t iface, uint3
 		epInfo[index].deviceEpNum		= (pep->bEndpointAddress & 0x0F);
 		epInfo[index].maxPktSize	= (uint8_t)pep->wMaxPacketSize;
 		epInfo[index].epAttribs		= 0;
+		epInfo[index].bmNakPower	= USB_NAK_NOWAIT;
 
 		TRACE_USBHOST(printf("HIDBoot::EndpointXtract : Found new endpoint\r\n");)
 		TRACE_USBHOST(printf("HIDBoot::EndpointXtract : deviceEpNum: %lu\r\n", epInfo[index].deviceEpNum);)
