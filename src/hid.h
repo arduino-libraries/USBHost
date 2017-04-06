@@ -88,6 +88,7 @@ e-mail   :  support@circuitsathome.com
 #define HID_INTF                    0x03
 
 /* HID Interface Class SubClass Codes */
+#define HID_NONE_SUBCLASS           0x00
 #define HID_BOOT_INTF_SUBCLASS      0x01
 
 /* HID Interface Class Protocol Codes */
