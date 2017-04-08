@@ -20,6 +20,13 @@
 #define VIVETRACKER_BUTTON_PADTOUCHED    (1 << 5)
 
 
+/*
+ * The format of the USB HID feature reports is unfortunately not correct in HTC's documentation.
+ * Fortunately Peter S. Hollander was able to find out the correct format of the feature reports,
+ * and he was kind enough to share the details on his blog: 
+ * http://www.talariavr.com/blog/vive-tracker-initial-documentation/
+ */
+
 /**
  * \struct Vive Tracker Feature Report 0xB3
  */

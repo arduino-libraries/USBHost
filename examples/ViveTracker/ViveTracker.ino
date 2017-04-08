@@ -32,5 +32,5 @@ void loop() {
 		uint16_t batteryLevel = 0;
 		tracker.setTrackerStatus(buttons, padX, padY, trigger, batteryLevel);
 	}
-	delay(300);
+	delay(10); // According to HTC's documentation the interval to send data should be at least 10 ms.
 }
