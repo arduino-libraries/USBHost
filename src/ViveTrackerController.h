@@ -19,6 +19,12 @@
 #define VIVETRACKER_BUTTON_PADTRIGGERED  (1 << 4)
 #define VIVETRACKER_BUTTON_PADTOUCHED    (1 << 5)
 
+#define VIVETRACKER_LPF_DEFAULT          0
+#define VIVETRACKER_LPF_184HZ            0
+#define VIVETRACKER_LPF_5HZ              1
+#define VIVETRACKER_LPF_10HZ             2
+#define VIVETRACKER_LPF_20HZ             3
+
 
 /*
  * The format of the USB HID feature reports is unfortunately not correct in HTC's documentation.
@@ -32,12 +38,13 @@
  */
 struct __attribute__((__packed__)) ViveTrackerFeatureReportB3 {
 	uint8_t address = 0xB3;
-	uint8_t payloadSize = 3;
+	uint8_t payloadSize = 4;
 	uint8_t hostType;
 	uint8_t chargeEnable;
 	uint8_t osType;
-	ViveTrackerFeatureReportB3(uint8_t hostType = 3, uint8_t chargeEnable = 0, uint8_t osType = 0)
-		: hostType(hostType), chargeEnable(chargeEnable), osType(osType) {}
+	uint8_t lpfConfig;
+	ViveTrackerFeatureReportB3(uint8_t hostType = 3, uint8_t chargeEnable = 0, uint8_t osType = 0, uint8_t lpfConfig = VIVETRACKER_LPF_DEFAULT)
+		: hostType(hostType), chargeEnable(chargeEnable), osType(osType), lpfConfig(lpfConfig) {}
 };
 
 /**
@@ -99,7 +106,8 @@ private:
  */
 class ViveTrackerController {
 public:
-	ViveTrackerController(USBHost &usb) : usb(usb), hostTracker(&usb) {}
+	ViveTrackerController(USBHost &usb, uint8_t hostType = 3, uint8_t chargeEnabled = 0, uint8_t osType = 0)
+		: usb(usb), hostTracker(&usb), _hostType(hostType), _chargeEnabled(chargeEnabled), _osType(osType) {}
 
 	/**
 	 * Returns whether a vive tracker is connected and initialized.
@@ -131,6 +139,19 @@ public:
 		return -1;
 	}
 
+	uint32_t setChargeEnabled(uint8_t enabled, bool sendUsbReport = true) {
+		_chargeEnabled = enabled;
+		if (sendUsbReport) {
+			return sendUsbReportB3(_hostType, _chargeEnabled, _osType, VIVETRACKER_LPF_DEFAULT);
+		} else {
+			return 0;
+		}
+	}
+
+	uint32_t setLpfConfig(uint8_t lpfConfig) {
+		return sendUsbReportB3(_hostType, _chargeEnabled, _osType, lpfConfig);
+	}
+
 	/**
 	 * Process usb and vive tracker controller tasks.
 	 *
@@ -149,10 +170,18 @@ private:
 	USBHost &usb;
 	ViveTrackerBoot hostTracker;
 	bool _isInitialized = false;
+	uint8_t _hostType;
+	uint8_t _chargeEnabled;
+	uint8_t _osType;
 
-	uint32_t _initConnection(uint8_t hostType = 3, uint8_t chargeEnable = 0, uint8_t osType = 0) {
-		ViveTrackerFeatureReportB3 report(hostType, chargeEnable, osType);
+	uint32_t _initConnection() {
+		return sendUsbReportB3(_hostType, _chargeEnabled, _osType, VIVETRACKER_LPF_DEFAULT);
+	}
+
+	uint32_t sendUsbReportB3(uint8_t hostType, uint8_t chargeEnabled, uint8_t osType, uint8_t lpfConfig) {
+		ViveTrackerFeatureReportB3 report(hostType, chargeEnabled, osType, lpfConfig);
 		return hostTracker.SetReport(0, 2, 3, 0, sizeof(ViveTrackerFeatureReportB3), (uint8_t*)&report);
+
 	}
 };
 
