@@ -253,7 +253,7 @@ uint32_t USBHost::ctrlReq(uint32_t addr, uint32_t ep, uint8_t bmReqType, uint8_t
 				if (rcode)
 					return rcode;
 
-				// Invoke callback function if inTransfer completed successfuly and callback function pointer is specified
+				// Invoke callback function if inTransfer completed successfully and callback function pointer is specified
 				if (!rcode && p)
 					((USBReadParser*)p)->Parse(read, dataptr, total - left);
 
@@ -821,7 +821,7 @@ void USBHost::Task(void)
 				{
 					TRACE_USBHOST(printf(" + USB_ATTACHED_SUBSTATE_WAIT_SOF\r\n");)
 
-					// 20ms waiting elapsed
+					// 20 ms waiting elapsed
 					usb_task_state = USB_STATE_CONFIGURING;
 				}
             }

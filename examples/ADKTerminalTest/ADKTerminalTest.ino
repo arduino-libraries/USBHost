@@ -7,7 +7,7 @@
 
  The ADK for the Arduino Due is a work in progress
  For additional information on the Arduino ADK visit
- http://labs.arduino.cc/ADK/Index
+ https://web.archive.org/web/20170503104018/http://labs.arduino.cc/ADK/Index
 
  created 27 June 2012
  by Cristian Maglie

@@ -56,7 +56,7 @@ class ConfigDescParser : public USBReadParser
 	uint32_t				dscrLen;			// Descriptor length
 	uint32_t				dscrType;			// Descriptor type
 
-	bool					isGoodInterface;	// Apropriate interface flag
+	bool					isGoodInterface;	// Appropriate interface flag
 	uint32_t				confValue;			// Configuration value
 	uint32_t				protoValue;			// Protocol value
 	uint32_t				ifaceNumber;		// Interface number
@@ -145,7 +145,7 @@ bool ConfigDescParser<CLASS_ID, SUBCLASS_ID, PROTOCOL_ID, MASK>::ParseDescriptor
 			// This is a sort of hack. Assuming that two bytes are already in the buffer
 			//	the pointer is positioned two bytes ahead in order for the rest of descriptor
 			//	to be read right after the size and the type fields.
-			// This should be used carefuly. varBuffer should be used directly to handle data
+			// This should be used carefully. varBuffer should be used directly to handle data
 			//	in the buffer.
 			theBuffer.pValue	= varBuffer + 2;
 			stateParseDescr		= 3;

@@ -200,7 +200,7 @@ uint32_t ADK::Init(uint32_t parent, uint32_t port, uint32_t lowspeed)
 
 		if (bNumEP == 3)
 		{
-			// Assign epInfo to epinfo pointer - this time all 3 endpoins
+			// Assign epInfo to epinfo pointer - this time all 3 endpoints
 			rcode = pUsb->setEpInfoEntry(bAddress, 3, epInfo);
 			if (rcode)
 			{
