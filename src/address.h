@@ -36,7 +36,7 @@ e-mail   :  support@circuitsathome.com
  *
  * \note The number of host pipe is limited by the hardware (10 on SAM3X).
  * Moreover hostPipeNum allocation is static, meaning that only a limited
- * amount of device endpoints can be opened at the same time, thus limitating
+ * amount of device endpoints can be opened at the same time, thus limiting
  * the maximum number of connected devices at the same time.
  */
 struct EpInfo
@@ -81,7 +81,7 @@ struct UsbDeviceAddress
 			uint32_t		bmAddress	: 3;	// device address/port number
 			uint32_t		bmParent	: 3;	// parent hub address
 			uint32_t		bmHub		: 1;	// hub flag
-			uint32_t		bmReserved	: 25;	// reserved, must be zerro
+			uint32_t		bmReserved	: 25;	// reserved, must be zero
 		};
 		uint32_t	devAddress;
 	};
@@ -154,7 +154,7 @@ private:
 	};
 
 	/**
-	 * \brief Return an address pool index for a given  address. This index can
+	 * \brief Return an address pool index for a given address. This index can
 	 * further be used to retrieve the corresponding USB device instance
 	 * UsbDevice.
 	 *
@@ -179,8 +179,8 @@ private:
 	 * UsbDevice.
 	 *
 	 * \param addr Parent USB address.
-	 * \param start Search in the pool from this index. Calling multiple time
-	 * this function with the returned index + 1 can be used to walk through
+	 * \param start Search in the pool from this index. Calling this function
+	 * multiple times with the returned index + 1 can be used to walk through
 	 * all children.
 	 *
 	 * \return Child index number if found, 0 otherwise.
@@ -201,7 +201,7 @@ private:
 	 * \brief Free address entry specified by index parameter.
 	 *
 	 * \note Calling FreeAddressByIndex only frees the USB address for possible
-	 * further assignement. However, it does not free the actual USB resources
+	 * further assignment. However, it does not free the actual USB resources
 	 * used by the device. This can be made by calling the release() method
 	 * from any UsbDevice class implementing USBDeviceConfig.
 	 *
@@ -249,7 +249,7 @@ public:
 		// Init address zero (reserved)
 		InitEntry(0);
 
-		// Init all remaing addresses
+		// Init all remaining addresses
 		InitAllAddresses();
 
 		// Configure ep0 used for enumeration
@@ -370,7 +370,7 @@ public:
 	};
 
 	// Returns number of hubs attached
-	// It can be rather helpfull to find out if there are hubs attached than getting the exact number of hubs.
+	// It can be rather helpful to find out if there are hubs attached than getting the exact number of hubs.
 	/*uint32_t GetNumHubs()
 	{
 		return hubCounter;

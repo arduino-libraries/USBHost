@@ -98,7 +98,7 @@ void KeyboardReportParser::Parse(HID *hid, bool is_rpt_id, uint32_t len, uint8_t
 };
 
 /**
- * \brief Handle keyboard locking keys and manage keyboard leds using USB
+ * \brief Handle keyboard locking keys and manage keyboard LEDs using USB
  * report.
  *
  * \param hid HID device pointer.
