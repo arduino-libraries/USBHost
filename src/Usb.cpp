@@ -723,23 +723,28 @@ void USBHost::Task(void)
 	{
         case UHD_STATE_ERROR:
 			// Illegal state
+        	//Serial.write("UHD_STATE_ERROR\n");
             usb_task_state = USB_DETACHED_SUBSTATE_ILLEGAL;
 			lowspeed = 0;
             break;
 
         case UHD_STATE_DISCONNECTED:
+        	//Serial.write("UHD_STATE_DISCONNECTED\n");
 			// Disconnected state
             if ((usb_task_state & USB_STATE_MASK) != USB_STATE_DETACHED)
 			{
+            	//Serial.write("UHD_STATE_DISCONNECTED2\n");
                 usb_task_state = USB_DETACHED_SUBSTATE_INITIALIZE;
 				lowspeed = 0;
             }
             break;
 
         case UHD_STATE_CONNECTED:
+        	//Serial.write("UHD_STATE_CONNECTED\n");
 			// Attached state
             if ((usb_task_state & USB_STATE_MASK) == USB_STATE_DETACHED)
 			{
+            	//Serial.write("UHD_STATE_CONNECTED2\n");
                 delay = millis() + USB_SETTLE_DELAY;
                 usb_task_state = USB_ATTACHED_SUBSTATE_SETTLE;
 				//FIXME TODO: lowspeed = 0 ou 1;  already done by hardware?
