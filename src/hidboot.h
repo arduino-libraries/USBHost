@@ -173,7 +173,7 @@ protected:
 /**
  * \class HIDBoot definition.
  */
-template <const uint8_t BOOT_PROTOCOL>
+template <const uint8_t BOOT_PROTOCOL, const uint8_t HID_SUBCLASS = HID_BOOT_INTF_SUBCLASS>
 class HIDBoot : public HID
 {
 	EpInfo		epInfo[totalEndpoints];
@@ -206,11 +206,12 @@ public:
 	virtual void EndpointXtract(uint32_t conf, uint32_t iface, uint32_t alt, uint32_t proto, const USB_ENDPOINT_DESCRIPTOR *ep);
 };
 
+
 /**
  * \brief HIDBoot class constructor.
  */
-template <const uint8_t BOOT_PROTOCOL>
-HIDBoot<BOOT_PROTOCOL>::HIDBoot(USBHost *p) :
+template <const uint8_t BOOT_PROTOCOL, const uint8_t HID_SUBCLASS>
+HIDBoot<BOOT_PROTOCOL, HID_SUBCLASS>::HIDBoot(USBHost *p) :
 		HID(p),
 		pRptParser(NULL),
 		qNextPollTime(0),
@@ -225,8 +226,8 @@ HIDBoot<BOOT_PROTOCOL>::HIDBoot(USBHost *p) :
 /**
  * \brief Initialize HIDBoot class.
  */
-template <const uint8_t BOOT_PROTOCOL>
-void HIDBoot<BOOT_PROTOCOL>::Initialize()
+template <const uint8_t BOOT_PROTOCOL, const uint8_t HID_SUBCLASS>
+void HIDBoot<BOOT_PROTOCOL, HID_SUBCLASS>::Initialize()
 {
 	for (uint32_t i = 0; i < totalEndpoints; ++i)
 	{
@@ -251,8 +252,8 @@ void HIDBoot<BOOT_PROTOCOL>::Initialize()
  *
  * \return 0 on success, error code otherwise.
  */
-template <const uint8_t BOOT_PROTOCOL>
-uint32_t HIDBoot<BOOT_PROTOCOL>::Init(uint32_t parent, uint32_t port, uint32_t lowspeed)
+template <const uint8_t BOOT_PROTOCOL, const uint8_t HID_SUBCLASS>
+uint32_t HIDBoot<BOOT_PROTOCOL, HID_SUBCLASS>::Init(uint32_t parent, uint32_t port, uint32_t lowspeed)
 {
 	const uint32_t constBufSize = sizeof(USB_DEVICE_DESCRIPTOR);
 
@@ -360,7 +361,7 @@ uint32_t HIDBoot<BOOT_PROTOCOL>::Init(uint32_t parent, uint32_t port, uint32_t l
 	{
 		ConfigDescParser<
 			USB_CLASS_HID,
-			HID_BOOT_INTF_SUBCLASS,
+			HID_SUBCLASS,
 			BOOT_PROTOCOL,
 			CP_MASK_COMPARE_ALL>	confDescrParser(this);
 
@@ -443,8 +444,8 @@ Fail:
  * \param proto Protocol version used.
  * \param pep Pointer to endpoint descriptor.
  */
-template <const uint8_t BOOT_PROTOCOL>
-void HIDBoot<BOOT_PROTOCOL>::EndpointXtract(uint32_t conf, uint32_t iface, uint32_t alt, uint32_t proto, const USB_ENDPOINT_DESCRIPTOR *pep)
+template <const uint8_t BOOT_PROTOCOL, const uint8_t HID_SUBCLASS>
+void HIDBoot<BOOT_PROTOCOL, HID_SUBCLASS>::EndpointXtract(uint32_t conf, uint32_t iface, uint32_t alt, uint32_t proto, const USB_ENDPOINT_DESCRIPTOR *pep)
 {
 	// If the first configuration satisfies, the others are not considered.
 	if (bNumEP > 1 && conf != bConfNum)
@@ -493,8 +494,8 @@ void HIDBoot<BOOT_PROTOCOL>::EndpointXtract(uint32_t conf, uint32_t iface, uint3
  *
  * \return Always 0.
  */
-template <const uint8_t BOOT_PROTOCOL>
-uint32_t HIDBoot<BOOT_PROTOCOL>::Release()
+template <const uint8_t BOOT_PROTOCOL, const uint8_t HID_SUBCLASS>
+uint32_t HIDBoot<BOOT_PROTOCOL, HID_SUBCLASS>::Release()
 {
 	// Free allocated host pipes
 	UHD_Pipe_Free(epInfo[epInterruptInIndex].hostPipeNum);
@@ -519,8 +520,8 @@ uint32_t HIDBoot<BOOT_PROTOCOL>::Release()
  *
  * \return 0 on success, error code otherwise.
  */
-template <const uint8_t BOOT_PROTOCOL>
-uint32_t HIDBoot<BOOT_PROTOCOL>::Poll()
+template <const uint8_t BOOT_PROTOCOL, const uint8_t HID_SUBCLASS>
+uint32_t HIDBoot<BOOT_PROTOCOL, HID_SUBCLASS>::Poll()
 {
 	uint32_t rcode = 0;
 
