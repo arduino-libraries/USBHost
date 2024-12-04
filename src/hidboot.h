@@ -29,6 +29,10 @@ e-mail   :  support@circuitsathome.com
 #define KEY_ZERO					0x27
 #define KEY_ZERO2					0x62
 #define KEY_ENTER					0x28
+#define KEY_ESCAPE					0x29
+#define KEY_DELETE					0x2A	// Backspace
+#define KEY_DELETE_FORWARD			0x4C	// Delete
+#define KEY_TAB   					0x2B
 #define KEY_PERIOD					0x63
 
 /**
