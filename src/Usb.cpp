@@ -715,7 +715,15 @@ void USBHost::Task(void)
 	uint32_t rcode = 0;
 	volatile uint32_t tmpdata = 0;
 	static uint32_t delay = 0;
+	static uint32_t lasttime = 0;
+	uint32_t currenttime = 0;
+	uint32_t deltatime = 0;
 	uint32_t lowspeed = 0;
+
+	currenttime = millis();
+	deltatime = (currenttime - lasttime);
+	delay = ((delay > deltatime) ? (delay - deltatime) : 0);
+	lasttime = currenttime;
 
     // Update USB task state on Vbus change
 	tmpdata = UHD_GetVBUSState();
@@ -740,7 +748,7 @@ void USBHost::Task(void)
 			// Attached state
             if ((usb_task_state & USB_STATE_MASK) == USB_STATE_DETACHED)
 			{
-                delay = millis() + USB_SETTLE_DELAY;
+                delay = USB_SETTLE_DELAY;
                 usb_task_state = USB_ATTACHED_SUBSTATE_SETTLE;
 				//FIXME TODO: lowspeed = 0 ou 1;  already done by hardware?
             }
@@ -780,7 +788,7 @@ void USBHost::Task(void)
 
         case USB_ATTACHED_SUBSTATE_SETTLE:
 			// Settle time for just attached device
-            if (delay < millis())
+            if (!delay)
 			{
 				TRACE_USBHOST(printf(" + USB_ATTACHED_SUBSTATE_SETTLE\r\n");)
                 usb_task_state = USB_ATTACHED_SUBSTATE_RESET_DEVICE;
@@ -809,7 +817,7 @@ void USBHost::Task(void)
                 usb_task_state = USB_ATTACHED_SUBSTATE_WAIT_SOF;
 
 				// Wait 20ms after Bus Reset (USB spec)
-                delay = millis() + 20;
+                delay = 20;
             }
             break;
 
@@ -817,7 +825,7 @@ void USBHost::Task(void)
 			// Wait for SOF received first
             if (Is_uhd_sof())
 			{
-				if (delay < millis())
+				if (!delay)
 				{
 					TRACE_USBHOST(printf(" + USB_ATTACHED_SUBSTATE_WAIT_SOF\r\n");)
 
