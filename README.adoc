@@ -7,7 +7,9 @@ image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/
 image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/compile-examples.yml/badge.svg["Compile Examples status", link="https://github.com/{repository-owner}/{repository-name}/actions/workflows/compile-examples.yml"]
 image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/spell-check.yml/badge.svg["Spell Check status", link="https://github.com/{repository-owner}/{repository-name}/actions/workflows/spell-check.yml"]
 
-The USBHost library allows an Arduino Due board to appear as a USB host, enabling it to communicate with peripherals like USB mice and keyboards.
+The USBHost library allows an Arduino Due board to appear as a USB host, enabling it to communicate with peripherals like USB mice, keyboards and HTC Vive trackers (requires at least tracker firmware v.20).
+
+For an USBHost library supporting Vive tracker for Arduino SAMD boards see [here](https://github.com/matzman666/USBHost-samd).
 
 For more information about this library please visit us at
 http://www.arduino.cc/en/Reference/{repository-name}
