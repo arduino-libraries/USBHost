@@ -150,8 +150,8 @@ uint8_t KeyboardReportParser::OemToAscii(uint8_t mod, uint8_t key)
 	if (key > 0x03 && key < 0x1e)
 	{
 		// Upper case letters
-		if ( (kbdLockingKeys.kbdLeds.bmCapsLock == 0 && (mod & 2)) ||
-			 (kbdLockingKeys.kbdLeds.bmCapsLock == 1 && (mod & 2) == 0) )
+		if ( (kbdLockingKeys.kbdLeds.bmCapsLock == 0 && shift) ||
+			 (kbdLockingKeys.kbdLeds.bmCapsLock == 1 && shift == 0) )
 			return (key - 4 + 'A');
 
 		// Lower case letters
